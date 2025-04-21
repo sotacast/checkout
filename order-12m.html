@@ -7,7 +7,7 @@
 
   <!-- Meta Tags -->
   <meta name="referrer" content="no-referrer">
-  
+
   <!-- External Scripts & Styles -->
   <script src="https://cdn.sell.app/embed/script.js" defer></script>
   <link href="https://cdn.sell.app/embed/style.css" rel="stylesheet">
@@ -20,46 +20,49 @@
       padding: 0;
     }
 
-    body {
+    html, body {
       background: #0e0e0e;
       color: #f5f5f5;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       overflow-x: hidden;
+      height: 100%;
       position: relative;
     }
 
-    /* Glowing blobs */
+    /* Glowing Blobs */
     .blob {
       position: absolute;
       border-radius: 50%;
       filter: blur(80px);
       opacity: 0.5;
       animation: float 20s infinite ease-in-out alternate;
+      pointer-events: none;
+      z-index: 1;
     }
 
     .blob1 {
-      background: #4a90e2; /* Blue Blob */
-      width: 300px;
-      height: 300px;
+      background: #4a90e2;
+      width: 40vw;
+      height: 40vw;
       top: 10%;
-      left: 10%;
+      left: 5%;
     }
 
     .blob2 {
-      background: #9b59b6; /* Violet Blob */
-      width: 400px;
-      height: 400px;
+      background: #9b59b6;
+      width: 60vw;
+      height: 60vw;
       bottom: 10%;
       right: 5%;
       animation-delay: 5s;
     }
 
     .blob3 {
-      background: #00bcd4; /* Cyan Blob */
-      width: 350px;
-      height: 350px;
+      background: #00bcd4;
+      width: 50vw;
+      height: 50vw;
       top: 40%;
-      left: 50%;
+      left: 40%;
       animation-delay: 3s;
     }
 
@@ -72,7 +75,7 @@
       }
     }
 
-    /* Particle background using canvas */
+    /* Particle Canvas */
     canvas#particleCanvas {
       position: fixed;
       top: 0;
@@ -81,11 +84,32 @@
       pointer-events: none;
     }
 
-    /* Sell App Hidden Button Styling */
+    /* Hidden Sell Button */
     .sellapp-scope {
-      display: none; /* Hide the button visually */
+      display: none;
     }
 
+    /* Optional Fallback Loading Message */
+    #loading-msg {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      font-size: 1.5rem;
+      color: #ccc;
+      margin-top: 30vh;
+    }
+
+    @media screen and (max-width: 768px) {
+      #loading-msg {
+        font-size: 1.2rem;
+        padding: 0 10px;
+        margin-top: 25vh;
+      }
+
+      .blob1, .blob2, .blob3 {
+        filter: blur(60px);
+      }
+    }
   </style>
 </head>
 <body>
@@ -96,27 +120,32 @@
   <!-- Glowing Blobs -->
   <div class="blob blob1"></div>
   <div class="blob blob2"></div>
-  <div class="blob blob3"></div> <!-- Added Cyan Blob -->
+  <div class="blob blob3"></div>
 
-  <!-- Sell App Hidden Button -->
+  <!-- Optional Loading Message -->
+  <div id="loading-msg">Preparing your secure checkout...</div>
+
+  <!-- Hidden Sell App Button -->
   <div class="sellapp-scope">
     <a id="auto-sell-btn"
        href="#"
        data-sell-store="60286"
        data-sell-product="293550"
        data-sell-darkmode="true"
-       data-sell-theme=""
-    ></a>
+       data-sell-theme="">
+    </a>
   </div>
 
   <script>
     window.addEventListener('load', () => {
       setTimeout(() => {
-        document.getElementById('auto-sell-btn').click(); // Auto-click the hidden button
-      }, 0); // Instantly click after the page loads
+        document.getElementById('auto-sell-btn').click();
+        const loadingMsg = document.getElementById('loading-msg');
+        if (loadingMsg) loadingMsg.style.display = 'none';
+      }, 300);
     });
 
-    // Particle Effect Script
+    // Particle Effect
     const canvas = document.getElementById('particleCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -148,8 +177,8 @@
         p.x += p.dx;
         p.y += p.dy;
 
-        if (p.x < 0 || p.x > width) p.dx = -p.dx;
-        if (p.y < 0 || p.y > height) p.dy = -p.dy;
+        if (p.x < 0 || p.x > width) p.dx *= -1;
+        if (p.y < 0 || p.y > height) p.dy *= -1;
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
