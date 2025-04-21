@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout - Your Order Summary</title>
+
+  <!-- Meta Tags -->
+  <meta name="referrer" content="no-referrer">
+  
+  <!-- External Scripts & Styles -->
+  <script src="https://cdn.sell.app/embed/script.js" defer></script>
+  <link href="https://cdn.sell.app/embed/style.css" rel="stylesheet">
+  <link rel="icon" href="fav.png" type="image/x-icon">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #0e0e0e;
+      color: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Glowing blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      animation: float 20s infinite ease-in-out alternate;
+    }
+
+    .blob1 {
+      background: #4a90e2; /* Blue Blob */
+      width: 300px;
+      height: 300px;
+      top: 10%;
+      left: 10%;
+    }
+
+    .blob2 {
+      background: #9b59b6; /* Violet Blob */
+      width: 400px;
+      height: 400px;
+      bottom: 10%;
+      right: 5%;
+      animation-delay: 5s;
+    }
+
+    .blob3 {
+      background: #00bcd4; /* Cyan Blob */
+      width: 350px;
+      height: 350px;
+      top: 40%;
+      left: 50%;
+      animation-delay: 3s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) translateX(0);
+      }
+      100% {
+        transform: translateY(-50px) translateX(50px);
+      }
+    }
+
+    /* Particle background using canvas */
+    canvas#particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Sell App Hidden Button Styling */
+    .sellapp-scope {
+      display: none; /* Hide the button visually */
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Particle Canvas -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Glowing Blobs -->
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div> <!-- Added Cyan Blob -->
+
+  <!-- Sell App Hidden Button -->
+  <div class="sellapp-scope">
+    <a id="auto-sell-btn"
+       href="#"
+       data-sell-store="60286"
+       data-sell-product="293517"
+       data-sell-darkmode="true"
+       data-sell-theme=""
+    ></a>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('auto-sell-btn').click(); // Auto-click the hidden button
+      }, 0); // Instantly click after the page loads
+    });
+
+    // Particle Effect Script
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let particlesArray = [];
+    let width, height;
+
+    function initCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      particlesArray = [];
+
+      const count = 100;
+      for (let i = 0; i < count; i++) {
+        particlesArray.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 2 + 1,
+          dx: (Math.random() - 0.5) * 0.5,
+          dy: (Math.random() - 0.5) * 0.5
+        });
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#ffffff22";
+
+      particlesArray.forEach(p => {
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > width) p.dx = -p.dx;
+        if (p.y < 0 || p.y > height) p.dy = -p.dy;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(animateParticles);
+    }
+
+    window.addEventListener('resize', initCanvas);
+    window.addEventListener('load', () => {
+      initCanvas();
+      animateParticles();
+    });
+  </script>
+
+</body>
+</html>
